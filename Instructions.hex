@@ -1,0 +1,148 @@
+93 00 70 03
+93 07 00 40
+23 80 17 00
+13 01 a0 00
+93 01 f0 ff
+13 02 40 00
+37 02 00 80
+93 02 80 00
+13 03 10 00
+b3 81 20 00
+33 82 20 40
+b3 82 11 00
+33 83 30 40
+93 f3 20 00
+13 e4 20 00
+93 c4 20 00
+13 75 24 00
+93 95 10 00
+13 56 11 00
+93 56 11 40
+13 d7 f1 41
+93 07 A0 00
+23 80 47 00
+03 81 47 00
+83 91 47 00
+03 a2 47 00
+83 c2 47 00
+03 D3 47 00
+93 A3 20 00
+13 B4 20 00
+93 A4 41 00
+13 B5 41 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+
+# Initialize registers with test values
+93 00 50 00    # addi x1, x0, 5        # x1 = 5
+13 01 A0 00    # addi x2, x0, 10       # x2 = 10
+93 01 F0 FF    # addi x3, x0, -1       # x3 = -1 (0xFFFFFFFF)
+13 02 40 00    # addi x4, x0, 4        # x4 = 4
+37 02 00 80    # lui  x4, 0x80000      # x4 = 0x80000000
+93 02 80 00    # addi x5, x0, 8        # x5 = 8
+13 03 10 00    # addi x6, x0, 1        # x6 = 1
+
+# Test arithmetic operations
+B3 81 20 00    # add  x3, x1, x2       # x3 = x1 + x2 = 15
+33 82 20 40    # sub  x4, x1, x2       # x4 = x1 - x2 = -5
+B3 82 11 00    # add  x5, x3, x1       # x5 = x3 + x1 = 20
+33 83 30 40    # sub  x6, x1, x3       # x6 = x1 - x3 = -10
+
+# Test logical operations
+93 F3 20 00    # andi x7, x1, 2        # x7 = x1 & 2 = 0
+13 E4 20 00    # ori  x8, x1, 2        # x8 = x1 | 2 = 7
+93 C4 20 00    # xori x9, x1, 2        # x9 = x1 ^ 2 = 7
+13 75 24 00    # andi x10, x8, 2       # x10 = x8 & 2 = 2
+
+# Test shifts
+93 95 10 00    # slli x11, x1, 1       # x11 = x1 << 1 = 10
+13 56 11 00    # srli x12, x2, 1       # x12 = x2 >> 1 = 5
+93 56 11 40    # srai x13, x2, 1       # x13 = x2 >> 1 = 5 (arithmetic)
+13 D7 F1 41    # srai x14, x3, 31      # x14 = x3 >> 31 = -1 (sign extension)
+
+# Test memory operations - byte
+93 07 A0 00    # addi x15, x0, 10      # Address base = 10
+23 80 47 00    # sb   x4, 0(x15)       # Store byte
+03 81 47 00    # lb   x2, 0(x15)       # Load signed byte
+83 91 47 00    # lh   x3, 0(x15)       # Load signed halfword
+03 A2 47 00    # lw   x4, 0(x15)       # Load word
+83 C2 47 00    # lbu  x5, 0(x15)       # Load unsigned byte
+03 D3 47 00    # lhu  x6, 0(x15)       # Load unsigned halfword
+
+# Test comparison operations
+93 A3 20 00    # slti  x7, x1, 2       # x7 = (x1 < 2) ? 1 : 0 = 0
+13 B4 20 00    # sltiu x8, x1, 2       # x8 = (x1 < 2) unsigned ? 1 : 0 = 0
+93 A4 41 00    # slti  x9, x3, 0       # x9 = (x3 < 0) ? 1 : 0 = 1
+13 B5 41 00    # sltu  x10, x3, x4     # x10 = (x3 < x4) unsigned = 0
+
+# Test branches
+63 80 20 00    # beq   x1, x2, 0       # Not taken
+63 90 20 00    # bne   x1, x2, 0       # Not taken
+63 C0 20 00    # blt   x1, x2, 0       # Taken
+63 D0 20 00    # bge   x1, x2, 0       # Not taken
+63 E0 20 00    # bltu  x1, x2, 0       # Taken
+63 F0 20 00    # bgeu  x1, x2, 0       # Not taken
+
+# Test upper immediate
+37 C5 AD DE    # lui   x10, 0xDEADC    # x10 = 0xDEADC000
+B7 F0 EF BE    # lui   x11, 0xBEEF0    # x11 = 0xBEEF0000
+33 06 B5 00    # add   x12, x10, x11   # x12 = x10 + x11
+
+# Test AUIPC (add upper immediate to pc)
+97 06 00 00    # auipc x13, 0          # x13 = pc
+17 07 AD DE    # auipc x14, 0xDEAD0    # x14 = pc + 0xDEAD0000
+
+# Test JAL and JALR
+EF 01 80 00    # jal   x3, 8           # Jump forward 8 bytes, x3 = pc + 4
+67 81 00 00    # jalr  x2, x1, 0       # Jump to address in x1, x2 = pc + 4
+
+# Test edge cases
+93 00 F0 FF    # addi  x1, x0, -1      # x1 = -1
+37 01 00 80    # lui   x2, 0x80000     # x2 = 0x80000000
+33 80 20 00    # add   x0, x1, x2      # Try to write to x0 (should remain 0)
+37 10 00 00    # lui   x0, 1           # Try to write to x0 (should remain 0)
+93 A0 F0 FF    # slti  x1, x1, -1      # Compare with -1
+23 20 10 00    # sw    x1, 0(x0)       # Store to address 0
+03 20 00 00    # lw    x0, 0(x0)       # Try to load into x0 (should remain 0)
+
+# End program
+00 00 00 00    # nop/end
